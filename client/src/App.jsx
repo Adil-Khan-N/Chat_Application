@@ -31,16 +31,19 @@ const App = () => {
           withCredentials: true,
         });
         if (response.status === 200 && response.data.id) {
-          setUserInfo(response.data);
+          setUserInfo(response.data); // This should set userInfo properly
+         
         } else {
           setUserInfo(undefined);
         }
       } catch (error) {
-        console.log({error})
+        console.log(error);
+        setUserInfo(undefined);
       } finally {
         setLoading(false);
       }
     };
+    
 
     getUserData();
   }, [setUserInfo]);

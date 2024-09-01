@@ -16,6 +16,9 @@ app.use(cors({
   methods: ["GET", "PUT", "DELETE", "POST"],
   credentials: true
 })); // Enable CORS
+
+app.use("/uploads/profiles", express.static("uploads/profiles"))
+
 app.use(cookieParser()); // Parse cookies
 app.use(express.json()); // Parse JSON bodies
 
