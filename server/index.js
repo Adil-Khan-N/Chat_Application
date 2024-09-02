@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectDb } from "./config/database.js";
 import AuthRoutes from "./routes/AuthRoute.js";
+import contactsRoutes from "./routes/ContactRoute.js";
 
 dotenv.config(); // Load environment variables
 
@@ -26,6 +27,7 @@ app.use(express.json()); // Parse JSON bodies
 connectDb();
 
 app.use("/api/auth",AuthRoutes)
+app.use('/api/contacts',contactsRoutes)
 
 // Start the server
 app.listen(port, () => {

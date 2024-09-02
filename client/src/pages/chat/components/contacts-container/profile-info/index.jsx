@@ -45,7 +45,7 @@ const ProfileInfo = () => {
             <div
               className={`uppercase h-12 w-12 text-lg border-[${getColor(userInfo.color) }]`}
             >
-              {firstName ? firstName.split("").shift() : userInfo.email.split("").shift()}
+              {userInfo.firstName ? userInfo.firstName.split("").shift() : userInfo.email.split("").shift()}
             </div>
           )}
         </Avatar>
