@@ -1,5 +1,8 @@
+import { Avatar, AvatarImage } from "@/components/ui/avatar.jsx";
 import { useAppStore } from "../../../../../../store/index.js";
 import { RiCloseFill } from "react-icons/ri";
+import { getColor } from "@/lib/utils.js";
+import { HOST } from "../../../../../../../../server/utils/constants.js";
 
 const ChatHeader = () => {
   const { closeChat, selectedChatData, selectedChatType } = useAppStore();
@@ -39,6 +42,7 @@ const ChatHeader = () => {
             onClick={closeChat}
             className="text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all"
           >
+            
             {/* Your content here */}
             <RiCloseFill className="text-3xl" />
           </button>

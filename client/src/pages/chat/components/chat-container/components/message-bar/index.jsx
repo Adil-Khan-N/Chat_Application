@@ -3,22 +3,15 @@ import { GrAttachment } from "react-icons/gr";
 import { RiEmojiStickerLine } from "react-icons/ri";
 import { IoSend } from "react-icons/io5";
 import EmojiPicker from "emoji-picker-react";
+import { useAppStore } from "@/store";
+import { useSocket } from "../../../../../../../context/SocketContext.jsx";
 
 const MessageBar = () => {
   const emojiRef = useRef(null);
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [message, setMessage] = useState("");
-
-  const handleAddEmoji = (emoji) => {
-    setMessage((msg) => msg + emoji.emoji);
-    setEmojiPickerOpen(false); // Close the picker after selecting an emoji
-  };
-
-  const handleSendMessage = () => {
-    // Add your send message logic here
-    console.log("Message sent:", message);
-    setMessage(""); // Clear the message input after sending
-  };
+  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
+  const socket = useSocket();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -26,14 +19,48 @@ const MessageBar = () => {
         setEmojiPickerOpen(false);
       }
     }
-    
+
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [emojiRef]);
 
+  useEffect(() => {
+    const handleReceiveMessage = (messageData) => {
+      console.log("Message received from server:", messageData);
+    };
+
+    if (socket) {
+      socket.on("receiveMessage", handleReceiveMessage);
+
+      return () => {
+        socket.off("receiveMessage", handleReceiveMessage);
+      };
+    }
+  }, [socket]);
+
+  const handleAddEmoji = (emoji) => {
+    setMessage((msg) => msg + emoji.emoji);
+  };
+
+  const handleSendMessage = async () => {
+    if (selectedChatType === "contact") {
+      const messageData = {
+        sender: userInfo.id,
+        content: message,
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined,
+      };
+  
+      socket.emit("sendMessage", messageData);
+  
+      setMessage("");
+    }
+  };
+  
   return (
     <div className="h-[10vh] bg-[#1c1d25] flex justify-center items-center px-8 mb-6 gap-6">
       <div className="flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5">
